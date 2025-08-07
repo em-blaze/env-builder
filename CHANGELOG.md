@@ -1,5 +1,11 @@
 # env-builder
 
+## 1.0.1
+
+### Patch Changes
+
+- bdeb4fd: Initial release
+
 ## 1.1.0-beta.1
 
 ### Minor Changes
