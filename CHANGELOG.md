@@ -1,25 +1,12 @@
-# env-builder
+# @kastia/env
 
-## 1.0.1
-
-### Patch Changes
-
-- a65e332: Initial release
-
-## 1.0.1
-
-### Patch Changes
-
-- bdeb4fd: Initial release
-
-## 1.1.0-beta.1
+## 1.1.0
 
 ### Minor Changes
 
-- 96a7633: Initial beta release for testing
-
-## 1.1.0-beta.0
-
-### Minor Changes
-
-- 74fa956: Initial minor release
+- 1e8c1a7: Add skip validation feature and comprehensive README improvements
+  - Add `skipValidation` option to `createEnv` function for bypassing validation
+  - Update TypeScript types to include new `skipValidation` parameter
+  - Add comprehensive test coverage for skip validation functionality
+  - Complete README overhaul with examples, API documentation, and platform support
+  - Maintain full backward compatibility with existing API
