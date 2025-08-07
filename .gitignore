@@ -1,2 +1,9 @@
-node_modules
-dist
+# Ignore the entire 'node_modules' directory
+node_modules/
+
+# Ignore the .env file (often used for environment variables)
+.env
+
+# Ignore build output directories
+build/
+dist/
