@@ -7,3 +7,6 @@ node_modules/
 # Ignore build output directories
 build/
 dist/
+
+# Ignore Claude Code settings
+.claude/

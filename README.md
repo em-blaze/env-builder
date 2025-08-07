@@ -48,18 +48,18 @@ Perfect for different runtimes and frameworks:
 
 ```typescript
 // Vite/Rollup (import.meta.env)
-const env = createEnv(schema, { 
-  envSource: import.meta.env 
+const env = createEnv(schema, {
+  envSource: import.meta.env,
 });
 
 // Deno
-const env = createEnv(schema, { 
-  envSource: Deno.env.toObject() 
+const env = createEnv(schema, {
+  envSource: Deno.env.toObject(),
 });
 
 // Edge runtime
-const env = createEnv(schema, { 
-  envSource: globalThis.env 
+const env = createEnv(schema, {
+  envSource: globalThis.env,
 });
 ```
 
@@ -69,14 +69,14 @@ Useful for development, testing, or when you need to bypass validation:
 
 ```typescript
 // Skip validation entirely
-const env = createEnv(schema, { 
-  skipValidation: true 
+const env = createEnv(schema, {
+  skipValidation: true,
 });
 
 // Combine with custom source
-const env = createEnv(schema, { 
+const env = createEnv(schema, {
   envSource: testEnv,
-  skipValidation: process.env.NODE_ENV === 'test'
+  skipValidation: process.env.NODE_ENV === 'test',
 });
 ```
 
@@ -94,12 +94,12 @@ try {
   if (error instanceof EnvValidationError) {
     console.log(error.message);
     // 🚨 Environment validation failed:
-    // 
+    //
     //   ❌ DATABASE_URL: Required
     //   ❌ PORT: Number must be greater than or equal to 1 (got: "0")
-    // 
+    //
     // 💡 Missing: DATABASE_URL
-    
+
     console.log(error.missing); // ['DATABASE_URL']
   }
 }
@@ -153,18 +153,21 @@ import { createEnv } from '@kastia/env';
 const env = createEnv({
   // Database
   DATABASE_URL: z.string().check(z.url()),
-  
+
   // Server
   PORT: z._default(z.coerce.number().check(z.gte(1), z.lte(65535)), 3000),
   HOST: z._default(z.string(), '0.0.0.0'),
-  
+
   // Environment
-  NODE_ENV: z._default(z.enum(['development', 'production', 'test']), 'development'),
-  
+  NODE_ENV: z._default(
+    z.enum(['development', 'production', 'test']),
+    'development',
+  ),
+
   // Security
   JWT_SECRET: z.string().check(z.minLength(32)),
   CORS_ORIGIN: z._default(z.string(), '*'),
-  
+
   // Optional features
   REDIS_URL: z.optional(z.string().check(z.url())),
   SENTRY_DSN: z.optional(z.string().check(z.url())),
@@ -179,15 +182,15 @@ export { env };
 const env = createEnv({
   SERVICE_NAME: z.string(),
   SERVICE_VERSION: z._default(z.string(), '1.0.0'),
-  
+
   // Observability
   OTEL_EXPORTER_OTLP_ENDPOINT: z.optional(z.string().check(z.url())),
   LOG_LEVEL: z._default(z.enum(['debug', 'info', 'warn', 'error']), 'info'),
-  
+
   // External services
   AUTH_SERVICE_URL: z.string().check(z.url()),
   USER_SERVICE_URL: z.string().check(z.url()),
-  
+
   // Resources
   MAX_MEMORY_MB: z._default(z.coerce.number().check(z.gte(128)), 512),
   MAX_CONNECTIONS: z._default(z.coerce.number().check(z.gte(1)), 100),

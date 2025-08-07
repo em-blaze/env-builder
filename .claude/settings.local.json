@@ -1,6 +1,11 @@
 {
   "permissions": {
-    "allow": ["Bash(npm audit:*)"],
+    "allow": [
+      "Bash(npm audit:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run test:*)"
+    ],
     "deny": []
   }
 }
