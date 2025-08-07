@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- a65e332: Initial release
+
+## 1.0.1
+
+### Patch Changes
+
 - bdeb4fd: Initial release
 
 ## 1.1.0-beta.1
