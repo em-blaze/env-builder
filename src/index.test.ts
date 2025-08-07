@@ -112,4 +112,46 @@ describe('createEnv', () => {
       }),
     ).toThrow(EnvValidationError);
   });
+
+  it('skips validation when skipValidation is true', () => {
+    process.env.DATABASE_URL = 'not-a-url';
+    process.env.PORT = 'invalid-port';
+
+    const env = createEnv(
+      {
+        DATABASE_URL: z.string().check(z.url()),
+        PORT: z.coerce.number().check(z.gte(1), z.lte(65535)),
+      },
+      { skipValidation: true },
+    );
+
+    expect(env.DATABASE_URL).toBe('not-a-url');
+    expect(env.PORT).toBe('invalid-port');
+  });
+
+  it('skips validation with custom envSource', () => {
+    const invalidEnv = {
+      DATABASE_URL: 'not-a-url',
+      PORT: 'invalid-port',
+    };
+
+    const env = createEnv(
+      {
+        DATABASE_URL: z.string().check(z.url()),
+        PORT: z.coerce.number().check(z.gte(1), z.lte(65535)),
+      },
+      { envSource: invalidEnv, skipValidation: true },
+    );
+
+    expect(env.DATABASE_URL).toBe('not-a-url');
+    expect(env.PORT).toBe('invalid-port');
+  });
+
+  it('returns frozen object when skipValidation is true', () => {
+    process.env.TEST_VAR = 'test';
+
+    const env = createEnv({ TEST_VAR: z.string() }, { skipValidation: true });
+
+    expect(Object.isFrozen(env)).toBe(true);
+  });
 });

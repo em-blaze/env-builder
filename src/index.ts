@@ -46,9 +46,9 @@ export class EnvValidationError extends Error {
 /**
  * Creates a type-safe, runtime-validated environment object from a given source (defaults to process.env)
  * @param schema Zod object schema describing required env vars
- * @param options Optional object: { envSource?: Record<string, unknown> }
+ * @param options Optional object: { envSource?: Record<string, unknown>; skipValidation?: boolean }
  * @returns Typed, immutable env object
- * @throws EnvValidationError if validation fails
+ * @throws EnvValidationError if validation fails (unless skipValidation is true)
  *
  * @example
  * import { z, createEnv } from 'env-builder';
@@ -62,13 +62,26 @@ export class EnvValidationError extends Error {
  *
  * // For custom sources (e.g., edge, Deno, import.meta.env):
  * // createEnv(schema, { envSource: import.meta.env })
+ *
+ * // To skip validation in development or testing:
+ * // createEnv(schema, { skipValidation: true })
  */
-export function createEnv<T extends Record<string, z.ZodMiniType<any, any>>>(
+
+export type EnvBuilder = <T extends Record<string, z.ZodMiniType<any, any>>>(
   schema: T,
-  options?: { envSource?: Record<string, unknown> },
-): z.infer<$ZodObject<T>> {
+  options?: { envSource?: Record<string, unknown>; skipValidation?: boolean },
+) => z.infer<$ZodObject<T>>;
+
+export const createEnv: EnvBuilder = (schema, options) => {
   const zodSchema = z.object(schema);
   const envSource = options?.envSource ?? process.env;
+
+  if (options?.skipValidation) {
+    const result = envSource as z.infer<$ZodObject<typeof schema>>;
+    Object.freeze(result);
+    return result;
+  }
+
   const parseResult = zodSchema.safeParse(envSource);
   if (!parseResult.success) {
     throw new EnvValidationError(
@@ -79,7 +92,7 @@ export function createEnv<T extends Record<string, z.ZodMiniType<any, any>>>(
   const validated = parseResult.data;
   Object.freeze(validated);
   return validated;
-}
+};
 
 /**
  * Type utility for inferring the env type
